@@ -97,6 +97,20 @@
         </section>
       </section>
 
+<!-- Bloc Déchets Végétaux -->
+<div class="gestion-dechets">
+    <h3>Valorisation des déchets (Végétal)</h3>
+    <label>Type de résidu (paille, tiges, etc.) :</label>
+    <input type="text" name="dechets_vegetaux_type" placeholder="Ex: Tiges de maïs">
+    
+    <label>Usage actuel :</label>
+    <select name="dechets_vegetaux_usage">
+        <option value="abandonne">Abandonné / Perdu</option>
+        <option value="compost">Compostage</option>
+        <option value="animaux">Nourriture animale</option>
+        <option value="brule">Brûlé</option>
+    </select>
+</div>
       <!-- TAB 2: Élevage -->
       <section id="tab-livestock" class="tab-content">
         <section class="section-card">
@@ -125,6 +139,20 @@
           </div>
         </section>
       </section>
+      <!-- Bloc Déchets Animaux -->
+<div class="gestion-dechets">
+    <h3>Valorisation des déchets (Animal)</h3>
+    <label>Type de résidu (fientes, lisier, etc.) :</label>
+    <input type="text" name="dechets_animaux_type" placeholder="Ex: Fientes de volaille">
+    
+    <label>Usage actuel :</label>
+    <select name="dechets_animaux_usage">
+        <option value="abandonne">Abandonné / Perdu</option>
+        <option value="compost">Compostage</option>
+        <option value="vendu">Vendu (engrais)</option>
+        <option value="autre">Autre</option>
+    </select>
+</div>
 
       <!-- TAB 3: Valorisation Circulaire -->
       <section id="tab-circularity" class="tab-content">
