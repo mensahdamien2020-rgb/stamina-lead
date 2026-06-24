@@ -1,0 +1,29 @@
+{
+  "farmName": "Ferme Test Togo",
+  "date": "2025-01-15",
+  "vegetation": {
+    "cropName": "Maïs",
+    "area": 2.5,
+    "yield": 1.8,
+    "price": 250,
+    "harvestLoss": 12,
+    "marketCircuit": "local-market",
+    "transportCost": 50000
+  },
+  "livestock": {
+    "type": "Chèvres",
+    "count": 15,
+    "feedCostMonthly": 75000,
+    "mortalityRate": 3,
+    "manure": 500
+  },
+  "circularity": {
+    "residueVolume": 800,
+    "valorisationType": "msn",
+    "msnLivestockSynergy": true
+  },
+  "economic": {
+    "labourCost": 150000,
+    "fertiliserCost": 100000
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "farmName": "Ferme Test",
+  "date": "2026-06-17",
+  "vegetation": {
+    "cropName": "Maïs",
+    "area": 2.5,
+    "yield": 1.8,
+    "price": 0.25,
+    "harvestLoss": 12
+  },
+  "livestock": {
+    "type": "Chèvres",
+    "count": 15,
+    "feedCostMonthly": 75.5,
+    "mortalityRate": 3
+  },
+  "circularity": {
+    "residueVolume": 800.25,
+    "valorisationType": "msn",
+    "msnLivestockSynergy": true
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "farm": {
+    "name": "Ferme Pilote",
+    "date": "2026-06-16",
+    "resources": [
+      {
+        "name": "manioc",
+        "type": "local",
+        "quantity": 2.5,
+        "unit": "ha"
+      }
+    ],
+    "createdAt": "2026-06-16T12:31:45.430Z"
+  }
+}

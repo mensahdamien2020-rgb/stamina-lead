@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>STAMINA LEAD – Audit Systémique Multi-Spéculation</title>
+    
+<link rel="icon" type="image/png" href="logo.png?v=4">
+    <link rel="apple-touch-icon" href="logo.png?v=4">
+    <link rel="stylesheet" href="style.css?v=4">
+    <link rel="manifest" href="manifest.json?v=4">
+    <meta name="theme-color" content="#1b4332">
+
+    <!-- 🍏 PARAMÈTRES SPÉCIFIQUES POUR IPHONE / IOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="STAMINA LEAD">
+    <link rel="apple-touch-icon" href="/logo.png?v=3">
+</head>
+<body>
+  <main class="container">
+    <h1>STAMINA LEAD — Audit Systémique Multi-Spéculation</h1>
+    <p class="lead">Analysez votre écosystème agricole intégré : cultures, élevage, valorisation circulaire.</p>
+
+    <form id="audit-form">
+     <button type="button" onclick="exporterRapport()" style="width: 100%; padding: 15px; background-color: #2a9d8f; color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: bold; margin-bottom: 20px; cursor: pointer;">
+        📋 Générer le rapport d'audit
+    </button> 
+      <!-- Infos générales -->
+      <section class="section-card">
+        <h2>Informations générales</h2>
+        <div class="form-grid">
+          <label>
+            Nom de la ferme
+            <input type="text" name="farmName" required placeholder="Ex: Ferme Togo" />
+          </label>
+          <label>
+            Date de visite
+            <input type="date" name="date" required />
+          </label>
+        </div>
+      </section>
+
+      <!-- Onglets -->
+      <div class="tabs">
+        <button type="button" class="tab-btn active" data-tab="vegetation">
+          🌾 Production Végétale
+        </button>
+        <button type="button" class="tab-btn" data-tab="livestock">
+          🐐 Élevage
+        </button>
+        <button type="button" class="tab-btn" data-tab="circularity">
+          ♻️ Valorisation Circulaire
+        </button>        <button type="button" class="tab-btn" data-tab="economic">
+          💵 Facteurs Économiques
+        </button>      </div>
+
+      <!-- TAB 1: Production Végétale -->
+      <section id="tab-vegetation" class="tab-content active">
+        <section class="section-card">
+          <h2>Section 1 : Production Végétale</h2>
+          <div class="form-grid">
+            <label>
+              Nom de la culture
+              <input type="text" name="cropName" placeholder="Ex: Maïs, Manioc, Riz" />
+            </label>
+            <label>
+              Surface cultivée (ha)
+              <input type="text" name="cropArea" placeholder="Ex: 2,5 ou 2.5" />
+            </label>
+            <label>
+              Rendement (t/ha)
+              <input type="text" name="cropYield" placeholder="Ex: 1,8 ou 1.8" />
+            </label>
+            <label>
+              Prix de vente (kg)
+              <input type="text" name="cropPrice" placeholder="Ex: 0,25 ou 0.25" />
+            </label>
+            <label>
+              Pertes récolte (%)
+              <input type="text" name="cropHarvestLoss" placeholder="Ex: 15" />
+            </label>
+            <label>
+              Circuit de commercialisation
+              <select name="marketCircuit" required>
+                <option value="">-- Sélectionnez --</option>
+                <option value="farm-gate">Bord de champ</option>
+                <option value="local-market">Marché local</option>
+                <option value="agro-industry">Agro-industrie</option>
+              </select>
+            </label>
+            <label>
+              Coût transport et emballage (FCFA)
+              <input type="text" name="transportCost" placeholder="Ex: 50000 ou 50,000" />
+            </label>
+          </div>
+        </section>
+      </section>
+
+      <!-- TAB 2: Élevage -->
+      <section id="tab-livestock" class="tab-content">
+        <section class="section-card">
+          <h2>Section 2 : Élevage</h2>
+          <div class="form-grid">
+            <label>
+              Type de bêtes
+              <input type="text" name="livestockType" placeholder="Ex: Chèvres, Poules, Lapins" />
+            </label>
+            <label>
+              Effectif (nombre)
+              <input type="text" name="livestockCount" placeholder="Ex: 10" />
+            </label>
+            <label>
+              Coût alimentation mensuel (FCFA)
+              <input type="text" name="livestockFeedCost" placeholder="Ex: 50000 ou 50,000" />
+            </label>
+            <label>
+              Taux de mortalité (%)
+              <input type="text" name="livestockMortalityRate" placeholder="Ex: 5" />
+            </label>
+            <label>
+              Quantité de déjections produites (kg/mois)
+              <input type="text" name="livestockManure" placeholder="Ex: 500 ou 500,5" />
+            </label>
+          </div>
+        </section>
+      </section>
+
+      <!-- TAB 3: Valorisation Circulaire -->
+      <section id="tab-circularity" class="tab-content">
+        <section class="section-card">
+          <h2>Section 3 : Valorisation Circulaire</h2>
+          <div class="form-grid">
+            <label>
+              Volume de résidus valorisés (kg)
+              <input type="text" name="residueVolume" placeholder="Ex: 500,25 ou 500.25" />
+            </label>
+            <label>
+              Type de valorisation
+              <select name="valorisationType">
+                <option value="">-- Sélectionnez --</option>
+                <option value="compost">Compost</option>
+                <option value="msn">Larves MSN</option>
+              </select>
+            </label>
+            <label style="grid-column: 1 / -1;">
+              <input type="checkbox" name="msn-livestock-synergy" />
+              Vérifier si valorisation en Larves MSN (réduit coûts alimentaires de 35%)
+            </label>
+          </div>
+        </section>
+      </section>
+
+      <!-- TAB 4: Facteurs Économiques -->
+      <section id="tab-economic" class="tab-content">
+        <section class="section-card">
+          <h2>Section 4 : Facteurs Économiques</h2>
+          <div class="form-grid">
+            <label>
+              Coût total main-d'œuvre (FCFA/mois)
+              <input type="text" name="labourCost" placeholder="Ex: 150000 ou 150,000" />
+            </label>
+            <label>
+              Coût engrais chimiques achetés (FCFA/an)
+              <input type="text" name="fertiliserCost" placeholder="Ex: 100000 ou 100,000" />
+            </label>
+          </div>
+        </section>
+      </section>
+
+      <!-- Actions -->
+      <div class="actions">
+        <button type="submit">Générer Diagnostic d'Écosystème Intégré</button>
+      </div>
+    </form>
+
+    <section id="message" class="message"></section>
+    <section id="audit-report" class="section-card" style="display:none;"></section>
+  </main>
+
+  <script>
+    // Tab switching
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const tabName = btn.dataset.tab;
+        
+        tabBtns.forEach(b => b.classList.remove('active'));
+        tabContents.forEach(c => c.classList.remove('active'));
+        
+        btn.classList.add('active');
+        document.getElementById(`tab-${tabName}`).classList.add('active');
+      });
+    });
+
+    // Form submission
+    const form = document.getElementById('audit-form');
+    const message = document.getElementById('message');
+    const auditReport = document.getElementById('audit-report');
+
+    function renderAuditReport(report) {
+      const recommendationsHtml = (report.recommendations || []).map(item => `<li>${item}</li>`).join('');
+
+      auditReport.innerHTML = `
+        <h2>Diagnostic d'Écosystème Intégré</h2>
+        <p class="summary"><strong>${report.title}</strong></p>
+        
+        <div class="section-card">
+          <h3>📊 Indicateurs Clés</h3>
+          <ul>
+            <li><strong>Score de Résilience :</strong> ${report.resilienceScore}/100</li>
+            <li><strong>Marge Nette Réelle :</strong> ${report.netRealMargin.toLocaleString('fr-FR')} FCFA</li>
+            <li><strong>Manque à gagner logistique :</strong> ${report.logisticLosses.toLocaleString('fr-FR')} FCFA</li>
+            <li><strong>Indice de Souveraineté Économique :</strong> ${report.economicSovereigntyIndex.toFixed(1)}%</li>
+            <li><strong>Taux de Perte Végétal :</strong> ${report.vegetalLossRate}%</li>
+            <li><strong>Taux de Mortalité Élevage :</strong> ${report.livestockMortalityRate}%</li>
+          </ul>
+        </div>
+
+        <div class="section-card">
+          <h3>💡 Analyse Production Végétale</h3>
+          <p>${report.vegetalAnalysis}</p>
+        </div>
+
+        <div class="section-card">
+          <h3>🐐 Analyse Élevage</h3>
+          <p>${report.livestockAnalysis}</p>
+        </div>
+
+        <div class="section-card">
+          <h3>♻️ Analyse Valorisation Circulaire</h3>
+          <p>${report.circularityAnalysis}</p>
+        </div>
+
+        <div class="section-card">
+          <h3>💰 Analyse Économique</h3>
+          <p>${report.economicAnalysis}</p>
+        </div>
+
+        <div class="section-card">
+          <h3>🎯 Recommandations Stratégiques</h3>
+          <ul>${recommendationsHtml}</ul>
+        </div>
+      `;
+      auditReport.style.display = 'block';
+    }
+
+    form.addEventListener('submit', async event => {
+      event.preventDefault();
+      message.textContent = 'Audit en cours...';
+      message.className = 'message';
+      auditReport.style.display = 'none';
+
+      const payload = {
+        farmName: form.farmName.value.trim(),
+        date: form.date.value,
+        vegetation: {
+          cropName: form.cropName.value.trim(),
+          area: form.cropArea.value.trim(),
+          yield: form.cropYield.value.trim(),
+          price: form.cropPrice.value.trim(),
+          harvestLoss: form.cropHarvestLoss.value.trim(),
+          marketCircuit: form.marketCircuit.value,
+          transportCost: form.transportCost.value.trim(),
+        },
+        livestock: {
+          type: form.livestockType.value.trim(),
+          count: form.livestockCount.value.trim(),
+          feedCostMonthly: form.livestockFeedCost.value.trim(),
+          mortalityRate: form.livestockMortalityRate.value.trim(),
+          manure: form.livestockManure.value.trim(),
+        },
+        circularity: {
+          residueVolume: form.residueVolume.value.trim(),
+          valorisationType: form.valorisationType.value,
+          msnLivestockSynergy: form['msn-livestock-synergy'].checked,
+        },
+        economic: {
+          labourCost: form.labourCost.value.trim(),
+          fertiliserCost: form.fertiliserCost.value.trim(),
+        },
+      };
+
+      try {
+        const response = await fetch('/audit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.status === 'ok') {
+          message.textContent = `✅ ${result.message}`;
+          message.className = 'message success';
+          renderAuditReport(result.report);
+        } else {
+          message.textContent = `❌ Erreur: ${result.message || 'Erreur serveur'}`;
+          message.className = 'message error';
+        }
+      } catch (error) {
+        message.textContent = `❌ Erreur réseau: ${error.message}`;
+        message.className = 'message error';
+      }
+    });
+  </script>
+</body>
+<div id="scoreContainer" style="position: fixed; bottom: 0; left: 0; width: 100%; background-color: #b7094c; color: white; text-align: center; padding: 15px 0; font-family: sans-serif; font-size: 1.2rem; font-weight: bold; box-shadow: 0 -3px 10px rgba(0,0,0,0.2); z-index: 1000; transition: background-color 0.5s ease;">
+        Résilience Globale : <span id="scoreValue">0</span>% (<span id="scoreStatus">Critique</span>)
+    </div>
+
+ <script>
+        // Sélection des éléments de la page
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        const textInputs = document.querySelectorAll('input[type="text"], input[type="date"], textarea');
+        const scoreValue = document.getElementById('scoreValue');
+        const scoreStatus = document.getElementById('scoreStatus');
+        const scoreContainer = document.getElementById('scoreContainer');
+
+        const pointsParCase = 10;
+
+        // 1. FONCTION DE CALCUL DU SCORE
+        function calculerScore() {
+            let totalMaxPoints = checkboxes.length * pointsParCase;
+            let pointsObtenus = 0;
+
+            checkboxes.forEach(box => {
+                if (box.checked) {
+                    pointsObtenus += pointsParCase;
+                }
+            });
+
+            let pourcentage = totalMaxPoints > 0 ? Math.round((pointsObtenus / totalMaxPoints) * 100) : 0;
+            
+            // Sécurité si l'élément scoreValue existe
+            if (scoreValue) scoreValue.textContent = pourcentage;
+
+            if (scoreContainer && scoreStatus) {
+                if (pourcentage <= 40) {
+                    scoreContainer.style.backgroundColor = "#b7094c"; // Rouge
+                    scoreStatus.textContent = "Critique";
+                } else if (pourcentage > 40 && pourcentage <= 70) {
+                    scoreContainer.style.backgroundColor = "#e9b824"; // Orange
+                    scoreStatus.textContent = "En Transition";
+                } else {
+                    scoreContainer.style.backgroundColor = "#1b4332"; // Vert STAMINA
+                    scoreStatus.textContent = "Souverain / Résilient";
+                }
+            }
+        }
+
+        // 2. FONCTION POUR SAUVEGARDER LES DONNÉES DANS L'IPHONE
+        function sauvegarderDonnees() {
+            const donneesAudit = {
+                checkboxes: {},
+                textes: {}
+            };
+
+            // Sauvegarde des cases cochées
+            checkboxes.forEach((box, index) => {
+                donneesAudit.checkboxes[index] = box.checked;
+            });
+
+            // Sauvegarde des champs textes
+            textInputs.forEach((input, index) => {
+                const cle = input.id || input.name || 'input_' + index;
+                donneesAudit.textes[cle] = input.value;
+            });
+
+            // Stockage local sous forme de chaîne de caractères
+            localStorage.setItem('stamina_audit_sauvegarde', JSON.stringify(donneesAudit));
+        }
+
+        // 3. FONCTION POUR CHARGER LES DONNÉES AU DÉMARRAGE
+        function chargerDonnees() {
+            const sauvegarde = localStorage.getItem('stamina_audit_sauvegarde');
+            if (!sauvegarde) return;
+
+            const donneesAudit = JSON.parse(sauvegarde);
+
+            // Restauration des cases
+            checkboxes.forEach((box, index) => {
+                if (donneesAudit.checkboxes && donneesAudit.checkboxes[index] !== undefined) {
+                    box.checked = donneesAudit.checkboxes[index];
+                }
+            });
+
+            // Restauration des textes
+            textInputs.forEach((input, index) => {
+                const cle = input.id || input.name || 'input_' + index;
+                if (donneesAudit.textes && donneesAudit.textes[cle] !== undefined) {
+                    input.value = donneesAudit.textes[cle];
+                }
+            });
+        }
+
+        // 4. ÉCOUTEURS D'ÉVÉNEMENTS
+        checkboxes.forEach(box => {
+            box.addEventListener('change', () => {
+                calculerScore();
+                sauvegarderDonnees();
+            });
+        });
+
+        textInputs.forEach(input => {
+            input.addEventListener('input', sauvegarderDonnees);
+        });
+
+        // 5. DEMARRAGE AUTOMATIQUE
+        chargerDonnees();
+        calculerScore();
+    </script>
+    function exporterRapport() {
+    let rapport = "--- RAPPORT STAMINA LEAD ---\n";
+    rapport += "Ferme : " + (document.querySelector('input[name="farmName"]')?.value || "Non spécifié") + "\n";
+    rapport += "Date : " + (document.querySelector('input[name="date"]')?.value || "Non spécifiée") + "\n";
+    rapport += "Score : " + (document.getElementById('scoreValue')?.textContent || "0") + "%\n\n";
+    rapport += "Détails cochés :\n";
+    
+    document.querySelectorAll('input[type="checkbox"]').forEach((box) => {
+        const label = box.parentElement.textContent.trim();
+        rapport += (box.checked ? "[✔] " : "[ ] ") + label + "\n";
+    });
+
+    // Copie automatique dans le presse-papier
+    navigator.clipboard.writeText(rapport).then(() => {
+        alert("Rapport copié ! Vous pouvez maintenant le coller dans WhatsApp ou un email.\n\n" + rapport);
+    });
+}  
+</body>
+</html>
+ 

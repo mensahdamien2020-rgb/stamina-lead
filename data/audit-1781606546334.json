@@ -1,0 +1,15 @@
+{
+  "farm": {
+    "name": "Ferme Pilote Djagblé",
+    "date": "2026-06-16",
+    "resources": [
+      {
+        "name": "manioc",
+        "type": "local",
+        "quantity": 1.5,
+        "unit": "ha"
+      }
+    ],
+    "createdAt": "2026-06-16T10:42:26.334Z"
+  }
+}

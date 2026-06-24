@@ -1,0 +1,18 @@
+{
+  "name": "stamina-lead",
+  "version": "0.1.0",
+  "description": "Outil d'audit agricole STAMINA LEAD - prototype",
+  "main": "src/server.js",
+  "scripts": {
+    "prestart": "npx kill-port 3000",
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "express": "^4.22.2"
+  },
+  "devDependencies": {
+    "kill-port": "^1.6.0"
+  },
+  "author": "STAMINA LEAD",
+  "license": "MIT"
+}
