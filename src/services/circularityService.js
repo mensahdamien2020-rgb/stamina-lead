@@ -1,21 +1,16 @@
-const EPS = 1e-6;
-
-function calculateCircularityScore({ farm, month = null }) {
-  let localTotal = 0;
-  let externalTotal = 0;
-
-  farm.resources.forEach(r => {
-    const qty = month ? r.availableInMonth(month) : r.quantity;
-    if (r.type === 'local') localTotal += qty;
-    else externalTotal += qty;
-  });
-
-  const ratio = localTotal / (externalTotal + EPS);
-  const score = Math.round(Math.min(100, (ratio / (1 + ratio)) * 100));
-
-  const message = `Score d'autonomie circulaire: ${score}/100. Ratio ressources locales/intrants externes = ${ratio.toFixed(2)}.`;
-
-  return { score, ratio, localTotal, externalTotal, message };
+function calculateCircularity(data) {
+    const localInputs = Number(data.localInputs) || 0;
+    const externalInputs = Number(data.externalInputs) || 0;
+    const valorisedWaste = Number(data.valorisedWaste) || 0;
+    
+    const EPS = 0.0001;
+    const total = localInputs + externalInputs + EPS;
+    const ratio = localInputs / total;
+    const score = Math.round(ratio * 100);
+    
+    const message = `Score de circularité : ${score}/100`;
+    
+    return { score, ratio, localInputs, externalInputs, valorisedWaste, message };
 }
 
-module.exports = { calculateCircularityScore };
+module.exports = { calculateCircularity };

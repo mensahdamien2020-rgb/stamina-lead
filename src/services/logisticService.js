@@ -1,15 +1,23 @@
-function logisticProfitabilityAnalysis({ transportCostPerUnit = 0, distance = 0, substitutionSavingsPerUnit = 0, units = 0 }) {
-  const totalTransportCost = transportCostPerUnit * distance * units;
-  const totalSavings = substitutionSavingsPerUnit * units;
-  const net = totalSavings - totalTransportCost;
+/**
+ * Calcule l'impact logistique sur la résilience
+ * @param {number} transportCost - Coût total de transport
+ * @param {string} circuit - Type de circuit (local, regional, export)
+ */
+function calculateLogisticImpact(transportCost, circuit) {
+    let circuitMultiplier = 1.0;
 
-  const recommendation = net >= 0 ? 'substitution_recommandee' : 'substitution_non_rentable';
+    // Ajustement du multiplicateur selon le circuit
+    if (circuit === 'local') circuitMultiplier = 1.2;
+    else if (circuit === 'regional') circuitMultiplier = 0.9;
+    else if (circuit === 'export') circuitMultiplier = 0.7;
 
-  const message = net >= 0
-    ? `Économies potentielles: ${totalSavings.toFixed(2)}. Coût transport: ${totalTransportCost.toFixed(2)}. Substitution rentable.`
-    : `Économies potentielles: ${totalSavings.toFixed(2)}. Coût transport: ${totalTransportCost.toFixed(2)}. Substitution non rentable.`;
+    // Plus le coût est élevé, plus l'impact est négatif
+    const impactScore = (100000 / (transportCost + 1000)) * circuitMultiplier;
 
-  return { totalTransportCost, totalSavings, net, recommendation, message };
+    return {
+        impactScore: Math.min(impactScore, 100).toFixed(2),
+        circuit: circuit
+    };
 }
 
-module.exports = { logisticProfitabilityAnalysis };
+module.exports = { calculateLogisticImpact };

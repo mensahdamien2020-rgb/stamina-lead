@@ -1,463 +1,632 @@
 <!doctype html>
 <html lang="fr">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>STAMINA LEAD – Audit Systémique Multi-Spéculation</title>
-    
-<link rel="icon" type="image/png" href="logo.png?v=4">
-    <link rel="apple-touch-icon" href="logo.png?v=4">
-    <link rel="stylesheet" href="style.css?v=4">
-    <link rel="manifest" href="manifest.json?v=4">
-    <meta name="theme-color" content="#1b4332">
-
-    <!-- 🍏 PARAMÈTRES SPÉCIFIQUES POUR IPHONE / IOS -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="STAMINA LEAD">
-    <link rel="apple-touch-icon" href="/logo.png?v=3">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ADODO – Audit Systémique Agricole</title>
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="apple-touch-icon" href="logo.png">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1b4332">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ADODO">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    :root {
+      --green-dark: #1b4332;
+      --green-mid: #2d6a4f;
+      --green-light: #40916c;
+      --emerald: #52b788;
+      --gold: #d4a017;
+      --gold-light: #f0c040;
+      --cream: #f8f5f0;
+      --white: #ffffff;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-400: #9ca3af;
+      --gray-600: #4b5563;
+      --gray-800: #1f2937;
+      --red: #b7094c;
+      --radius: 12px;
+      --shadow: 0 4px 24px rgba(27,67,50,0.10);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: var(--cream); color: var(--gray-800); min-height: 100vh; padding-bottom: 80px; }
+    .app-header { background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-mid) 100%); color: white; padding: 24px 20px 20px; text-align: center; position: relative; overflow: hidden; }
+    .app-header::before { content: ''; position: absolute; top: -40px; right: -40px; width: 180px; height: 180px; background: rgba(255,255,255,0.05); border-radius: 50%; }
+    .header-top { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 6px; }
+    .header-logo { width: 52px; height: 52px; border-radius: 14px; object-fit: cover; box-shadow: 0 3px 12px rgba(0,0,0,0.3); }
+    .header-badge { display: inline-block; background: rgba(212,160,23,0.25); border: 1px solid var(--gold); color: var(--gold-light); font-size: 0.68rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; padding: 3px 12px; border-radius: 20px; margin-bottom: 10px; }
+    .app-header h1 { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; line-height: 1.1; position: relative; z-index: 1; }
+    .app-header .tagline { font-size: 0.8rem; color: rgba(255,255,255,0.65); margin-top: 4px; font-style: italic; }
+    .app-header p { font-size: 0.85rem; color: rgba(255,255,255,0.75); max-width: 420px; margin: 6px auto 0; position: relative; z-index: 1; }
+    .progress-bar-wrap { background: var(--green-dark); padding: 0 20px 14px; }
+    .progress-steps { display: flex; gap: 4px; max-width: 600px; margin: 0 auto; }
+    .progress-step { flex: 1; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; cursor: pointer; transition: background 0.3s; }
+    .progress-step.active { background: var(--gold); }
+    .progress-step.done { background: var(--emerald); }
+    .container { max-width: 680px; margin: 0 auto; padding: 20px 16px; }
+    .card { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); padding: 24px; margin-bottom: 16px; border: 1px solid var(--gray-200); }
+    .card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+    .card-icon { width: 40px; height: 40px; background: linear-gradient(135deg, var(--green-dark), var(--green-light)); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+    .card-header h2 { font-size: 1rem; font-weight: 700; color: var(--green-dark); }
+    .card-header p { font-size: 0.78rem; color: var(--gray-400); margin-top: 1px; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .form-group { margin-bottom: 16px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .form-row.three { grid-template-columns: 1fr 1fr 1fr; }
+    @media (max-width: 480px) { .form-row, .form-row.three { grid-template-columns: 1fr; } }
+    label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--gray-600); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+    input[type="text"], input[type="date"], input[type="number"], select, textarea { width: 100%; padding: 11px 14px; border: 1.5px solid var(--gray-200); border-radius: 8px; font-size: 0.9rem; font-family: 'Inter', sans-serif; color: var(--gray-800); background: var(--white); transition: border-color 0.2s, box-shadow 0.2s; appearance: none; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--green-light); box-shadow: 0 0 0 3px rgba(64,145,108,0.12); }
+    textarea { resize: vertical; min-height: 80px; }
+    .section-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--emerald); margin: 20px 0 12px; display: flex; align-items: center; gap: 8px; }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--gray-200); }
+    .checkbox-group { display: flex; flex-direction: column; gap: 10px; }
+    .checkbox-item { display: flex; align-items: flex-start; gap: 10px; padding: 12px; border: 1.5px solid var(--gray-200); border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+    .checkbox-item:hover { border-color: var(--emerald); background: rgba(82,183,136,0.05); }
+    .checkbox-item input[type="checkbox"] { width: 18px; height: 18px; margin-top: 1px; accent-color: var(--green-dark); flex-shrink: 0; }
+    .checkbox-item .cb-label { font-size: 0.87rem; font-weight: 500; color: var(--gray-700); text-transform: none; letter-spacing: 0; margin: 0; }
+    .checkbox-item .cb-desc { font-size: 0.76rem; color: var(--gray-400); margin-top: 2px; display: block; }
+    .btn-primary { width: 100%; padding: 16px; background: linear-gradient(135deg, var(--green-dark), var(--green-light)); color: white; border: none; border-radius: var(--radius); font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 16px rgba(27,67,50,0.3); margin-top: 8px; }
+    .btn-primary:hover { transform: translateY(-1px); }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .btn-secondary { width: 100%; padding: 13px; background: transparent; color: var(--green-dark); border: 2px solid var(--green-dark); border-radius: var(--radius); font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; margin-top: 10px; }
+    .btn-secondary:hover { background: var(--green-dark); color: white; }
+    .btn-pdf { width: 100%; padding: 13px; background: linear-gradient(135deg, var(--gold), #b8860b); color: white; border: none; border-radius: var(--radius); font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: all 0.2s; margin-top: 10px; box-shadow: 0 3px 12px rgba(212,160,23,0.4); }
+    .btn-pdf:hover { transform: translateY(-1px); }
+    .btn-danger { width: 100%; padding: 13px; background: transparent; color: var(--red); border: 2px solid var(--red); border-radius: var(--radius); font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; margin-top: 10px; }
+    .btn-danger:hover { background: var(--red); color: white; }
+    .nav-btns { display: flex; gap: 10px; margin-top: 16px; }
+    .btn-nav { flex: 1; padding: 12px; border-radius: 10px; border: 1.5px solid var(--gray-200); background: var(--white); color: var(--gray-600); font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .btn-nav:hover { border-color: var(--green-light); color: var(--green-dark); }
+    .btn-nav.next { background: var(--green-dark); color: white; border-color: var(--green-dark); }
+    .loading-wrap { display: none; text-align: center; padding: 32px; }
+    .spinner { width: 40px; height: 40px; border: 3px solid var(--gray-200); border-top-color: var(--green-dark); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .message { padding: 14px 18px; border-radius: 10px; font-size: 0.9rem; font-weight: 500; margin-bottom: 16px; display: none; }
+    .message.success { background: rgba(82,183,136,0.12); border: 1.5px solid var(--emerald); color: var(--green-dark); display: block; }
+    .message.error { background: rgba(183,9,76,0.08); border: 1.5px solid var(--red); color: var(--red); display: block; }
+    #audit-report { display: none; }
+    .report-hero { background: linear-gradient(135deg, var(--green-dark), var(--green-mid)); color: white; border-radius: var(--radius); padding: 28px 24px; margin-bottom: 16px; position: relative; overflow: hidden; }
+    .report-hero::after { content: ''; position: absolute; right: 20px; top: 20px; font-size: 3rem; opacity: 0.15; }
+    .report-hero .farm-name { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; margin-bottom: 4px; }
+    .report-hero .report-date { font-size: 0.82rem; color: rgba(255,255,255,0.65); margin-bottom: 20px; }
+    .score-display { display: flex; align-items: flex-end; gap: 12px; }
+    .score-number { font-size: 3.5rem; font-weight: 800; line-height: 1; }
+    .score-bar-outer { flex: 1; height: 8px; background: rgba(255,255,255,0.2); border-radius: 4px; overflow: hidden; margin-bottom: 8px; }
+    .score-bar-inner { height: 100%; border-radius: 4px; transition: width 1s ease; background: var(--gold); }
+    .kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+    .kpi-card { background: var(--white); border-radius: var(--radius); padding: 18px 16px; border: 1px solid var(--gray-200); box-shadow: var(--shadow); }
+    .kpi-icon { font-size: 1.4rem; margin-bottom: 8px; }
+    .kpi-value { font-size: 1.3rem; font-weight: 800; color: var(--green-dark); line-height: 1.1; margin-bottom: 4px; }
+    .kpi-value.negative { color: var(--red); }
+    .kpi-label { font-size: 0.76rem; color: var(--gray-400); font-weight: 500; }
+    .analysis-card { background: var(--white); border-radius: var(--radius); border: 1px solid var(--gray-200); box-shadow: var(--shadow); margin-bottom: 12px; overflow: hidden; }
+    .analysis-card-header { padding: 14px 18px; background: var(--gray-100); border-bottom: 1px solid var(--gray-200); display: flex; align-items: center; gap: 8px; }
+    .analysis-card-header h3 { font-size: 0.9rem; font-weight: 700; color: var(--green-dark); }
+    .analysis-card-body { padding: 16px 18px; }
+    .analysis-card-body p { font-size: 0.875rem; color: var(--gray-600); line-height: 1.6; }
+    .reco-list { list-style: none; }
+    .reco-item { padding: 14px 16px; border-left: 3px solid var(--emerald); background: rgba(82,183,136,0.06); border-radius: 0 8px 8px 0; margin-bottom: 10px; font-size: 0.875rem; color: var(--gray-700); line-height: 1.55; }
+    #scoreContainer { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--red); color: white; text-align: center; padding: 14px 0; font-size: 1rem; font-weight: 700; box-shadow: 0 -3px 16px rgba(0,0,0,0.2); z-index: 1000; transition: background 0.5s ease; font-family: 'Inter', sans-serif; }
+  </style>
 </head>
 <body>
-  <main class="container">
-    <h1>STAMINA LEAD — Audit Systémique Multi-Spéculation</h1>
-    <p class="lead">Analysez votre écosystème agricole intégré : cultures, élevage, valorisation circulaire.</p>
 
-    <form id="audit-form">
-     <button type="button" onclick="exporterRapport()" style="width: 100%; padding: 15px; background-color: #2a9d8f; color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: bold; margin-bottom: 20px; cursor: pointer;">
-        📋 Générer le rapport d'audit
-    </button> 
-      <!-- Infos générales -->
-      <section class="section-card">
-        <h2>Informations générales</h2>
-        <div class="form-grid">
-          <label>
-            Nom de la ferme
-            <input type="text" name="farmName" required placeholder="Ex: Ferme Togo" />
-          </label>
-          <label>
-            Date de visite
-            <input type="date" name="date" required />
-          </label>
+<header class="app-header">
+  <div class="header-badge">Outil d'Audit Agricole</div>
+  <div class="header-top">
+    <img src="logo.png" alt="ADODO Logo" class="header-logo" onerror="this.style.display='none'">
+    <div>
+      <h1>ADODO</h1>
+      <div class="tagline">Adodo wo nyuie — La patience fait bien les choses</div>
+    </div>
+  </div>
+  <p>Audit Systémique Multi-Spéculation — Économie Bleue &amp; Circulaire</p>
+</header>
+
+<div class="progress-bar-wrap">
+  <div class="progress-steps">
+    <div class="progress-step active" onclick="goToTab(0)"></div>
+    <div class="progress-step" onclick="goToTab(1)"></div>
+    <div class="progress-step" onclick="goToTab(2)"></div>
+    <div class="progress-step" onclick="goToTab(3)"></div>
+    <div class="progress-step" onclick="goToTab(4)"></div>
+  </div>
+</div>
+
+<main class="container">
+  <div id="message" class="message"></div>
+  <div class="loading-wrap" id="loading">
+    <div class="spinner"></div>
+    <p style="color:var(--gray-400);font-size:0.9rem;">Generation du diagnostic en cours...</p>
+  </div>
+
+  <form id="audit-form">
+
+    <div class="tab-content active" id="tab-0">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">🏡</div>
+          <div><h2>Informations Générales</h2><p>Identification de l'exploitation agricole</p></div>
         </div>
-      </section>
-
-      <!-- Onglets -->
-      <div class="tabs">
-        <button type="button" class="tab-btn active" data-tab="vegetation">
-          🌾 Production Végétale
-        </button>
-        <button type="button" class="tab-btn" data-tab="livestock">
-          🐐 Élevage
-        </button>
-        <button type="button" class="tab-btn" data-tab="circularity">
-          ♻️ Valorisation Circulaire
-        </button>        <button type="button" class="tab-btn" data-tab="economic">
-          💵 Facteurs Économiques
-        </button>      </div>
-
-      <!-- TAB 1: Production Végétale -->
-      <section id="tab-vegetation" class="tab-content active">
-        <section class="section-card">
-          <h2>Section 1 : Production Végétale</h2>
-          <div class="form-grid">
-            <label>
-              Nom de la culture
-              <input type="text" name="cropName" placeholder="Ex: Maïs, Manioc, Riz" />
-            </label>
-            <label>
-              Surface cultivée (ha)
-              <input type="text" name="cropArea" placeholder="Ex: 2,5 ou 2.5" />
-            </label>
-            <label>
-              Rendement (t/ha)
-              <input type="text" name="cropYield" placeholder="Ex: 1,8 ou 1.8" />
-            </label>
-            <label>
-              Prix de vente (kg)
-              <input type="text" name="cropPrice" placeholder="Ex: 0,25 ou 0.25" />
-            </label>
-            <label>
-              Pertes récolte (%)
-              <input type="text" name="cropHarvestLoss" placeholder="Ex: 15" />
-            </label>
-            <label>
-              Circuit de commercialisation
-              <select name="marketCircuit" required>
-                <option value="">-- Sélectionnez --</option>
-                <option value="farm-gate">Bord de champ</option>
-                <option value="local-market">Marché local</option>
-                <option value="agro-industry">Agro-industrie</option>
-              </select>
-            </label>
-            <label>
-              Coût transport et emballage (FCFA)
-              <input type="text" name="transportCost" placeholder="Ex: 50000 ou 50,000" />
-            </label>
-          </div>
-        </section>
-      </section>
-
-<!-- Bloc Déchets Végétaux -->
-<div class="gestion-dechets">
-    <h3>Valorisation des déchets (Végétal)</h3>
-    <label>Type de résidu (paille, tiges, etc.) :</label>
-    <input type="text" name="dechets_vegetaux_type" placeholder="Ex: Tiges de maïs">
-    
-    <label>Usage actuel :</label>
-    <select name="dechets_vegetaux_usage">
-        <option value="abandonne">Abandonné / Perdu</option>
-        <option value="compost">Compostage</option>
-        <option value="animaux">Nourriture animale</option>
-        <option value="brule">Brûlé</option>
-    </select>
-</div>
-      <!-- TAB 2: Élevage -->
-      <section id="tab-livestock" class="tab-content">
-        <section class="section-card">
-          <h2>Section 2 : Élevage</h2>
-          <div class="form-grid">
-            <label>
-              Type de bêtes
-              <input type="text" name="livestockType" placeholder="Ex: Chèvres, Poules, Lapins" />
-            </label>
-            <label>
-              Effectif (nombre)
-              <input type="text" name="livestockCount" placeholder="Ex: 10" />
-            </label>
-            <label>
-              Coût alimentation mensuel (FCFA)
-              <input type="text" name="livestockFeedCost" placeholder="Ex: 50000 ou 50,000" />
-            </label>
-            <label>
-              Taux de mortalité (%)
-              <input type="text" name="livestockMortalityRate" placeholder="Ex: 5" />
-            </label>
-            <label>
-              Quantité de déjections produites (kg/mois)
-              <input type="text" name="livestockManure" placeholder="Ex: 500 ou 500,5" />
-            </label>
-          </div>
-        </section>
-      </section>
-      <!-- Bloc Déchets Animaux -->
-<div class="gestion-dechets">
-    <h3>Valorisation des déchets (Animal)</h3>
-    <label>Type de résidu (fientes, lisier, etc.) :</label>
-    <input type="text" name="dechets_animaux_type" placeholder="Ex: Fientes de volaille">
-    
-    <label>Usage actuel :</label>
-    <select name="dechets_animaux_usage">
-        <option value="abandonne">Abandonné / Perdu</option>
-        <option value="compost">Compostage</option>
-        <option value="vendu">Vendu (engrais)</option>
-        <option value="autre">Autre</option>
-    </select>
-</div>
-
-      <!-- TAB 3: Valorisation Circulaire -->
-      <section id="tab-circularity" class="tab-content">
-        <section class="section-card">
-          <h2>Section 3 : Valorisation Circulaire</h2>
-          <div class="form-grid">
-            <label>
-              Volume de résidus valorisés (kg)
-              <input type="text" name="residueVolume" placeholder="Ex: 500,25 ou 500.25" />
-            </label>
-            <label>
-              Type de valorisation
-              <select name="valorisationType">
-                <option value="">-- Sélectionnez --</option>
-                <option value="compost">Compost</option>
-                <option value="msn">Larves MSN</option>
-              </select>
-            </label>
-            <label style="grid-column: 1 / -1;">
-              <input type="checkbox" name="msn-livestock-synergy" />
-              Vérifier si valorisation en Larves MSN (réduit coûts alimentaires de 35%)
-            </label>
-          </div>
-        </section>
-      </section>
-
-      <!-- TAB 4: Facteurs Économiques -->
-      <section id="tab-economic" class="tab-content">
-        <section class="section-card">
-          <h2>Section 4 : Facteurs Économiques</h2>
-          <div class="form-grid">
-            <label>
-              Coût total main-d'œuvre (FCFA/mois)
-              <input type="text" name="labourCost" placeholder="Ex: 150000 ou 150,000" />
-            </label>
-            <label>
-              Coût engrais chimiques achetés (FCFA/an)
-              <input type="text" name="fertiliserCost" placeholder="Ex: 100000 ou 100,000" />
-            </label>
-          </div>
-        </section>
-      </section>
-
-      <!-- Actions -->
-      <div class="actions">
-        <button type="submit">Générer Diagnostic d'Écosystème Intégré</button>
+        <div class="form-group"><label>Nom de la ferme / exploitation</label><input type="text" name="farmName" placeholder="Ex: Ferme Agro-Ecologique de Kara" /></div>
+        <div class="form-row">
+          <div class="form-group"><label>Date de visite</label><input type="date" name="date" /></div>
+          <div class="form-group"><label>Région / Localité</label><input type="text" name="region" placeholder="Ex: Lomé, Plateaux" /></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Nom de l'auditeur</label><input type="text" name="auditorName" placeholder="Ex: Mensah Damien" /></div>
+          <div class="form-group"><label>Superficie totale (ha)</label><input type="text" name="totalArea" placeholder="Ex: 5.5" /></div>
+        </div>
+        <div class="form-group">
+          <label>Type d'exploitation</label>
+          <select name="farmType">
+            <option value="">-- Sélectionnez --</option>
+            <option value="polyculture">Polyculture / Elevage intégré</option>
+            <option value="maraichage">Maraîchage</option>
+            <option value="cereales">Céréales et Tubercules</option>
+            <option value="elevage">Elevage dominant</option>
+            <option value="agroforesterie">Agroforesterie</option>
+            <option value="mixte">Mixte</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Observations générales</label><textarea name="generalObservations" placeholder="Décrivez brièvement l'état général de l'exploitation..."></textarea></div>
       </div>
-    </form>
-
-    <section id="message" class="message"></section>
-    <section id="audit-report" class="section-card" style="display:none;"></section>
-  </main>
-
-  <script>
-    // Tab switching
-    const tabBtns = document.querySelectorAll('.tab-btn');
-    const tabContents = document.querySelectorAll('.tab-content');
-
-    tabBtns.forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        const tabName = btn.dataset.tab;
-        
-        tabBtns.forEach(b => b.classList.remove('active'));
-        tabContents.forEach(c => c.classList.remove('active'));
-        
-        btn.classList.add('active');
-        document.getElementById(`tab-${tabName}`).classList.add('active');
-      });
-    });
-
-    // Form submission
-    const form = document.getElementById('audit-form');
-    const message = document.getElementById('message');
-    const auditReport = document.getElementById('audit-report');
-
-    function renderAuditReport(report) {
-      const recommendationsHtml = (report.recommendations || []).map(item => `<li>${item}</li>`).join('');
-
-      auditReport.innerHTML = `
-        <h2>Diagnostic d'Écosystème Intégré</h2>
-        <p class="summary"><strong>${report.title}</strong></p>
-        
-        <div class="section-card">
-          <h3>📊 Indicateurs Clés</h3>
-          <ul>
-            <li><strong>Score de Résilience :</strong> ${report.resilienceScore}/100</li>
-            <li><strong>Marge Nette Réelle :</strong> ${report.netRealMargin.toLocaleString('fr-FR')} FCFA</li>
-            <li><strong>Manque à gagner logistique :</strong> ${report.logisticLosses.toLocaleString('fr-FR')} FCFA</li>
-            <li><strong>Indice de Souveraineté Économique :</strong> ${report.economicSovereigntyIndex.toFixed(1)}%</li>
-            <li><strong>Taux de Perte Végétal :</strong> ${report.vegetalLossRate}%</li>
-            <li><strong>Taux de Mortalité Élevage :</strong> ${report.livestockMortalityRate}%</li>
-          </ul>
-        </div>
-
-        <div class="section-card">
-          <h3>💡 Analyse Production Végétale</h3>
-          <p>${report.vegetalAnalysis}</p>
-        </div>
-
-        <div class="section-card">
-          <h3>🐐 Analyse Élevage</h3>
-          <p>${report.livestockAnalysis}</p>
-        </div>
-
-        <div class="section-card">
-          <h3>♻️ Analyse Valorisation Circulaire</h3>
-          <p>${report.circularityAnalysis}</p>
-        </div>
-
-        <div class="section-card">
-          <h3>💰 Analyse Économique</h3>
-          <p>${report.economicAnalysis}</p>
-        </div>
-
-        <div class="section-card">
-          <h3>🎯 Recommandations Stratégiques</h3>
-          <ul>${recommendationsHtml}</ul>
-        </div>
-      `;
-      auditReport.style.display = 'block';
-    }
-
-    form.addEventListener('submit', async event => {
-      event.preventDefault();
-      message.textContent = 'Audit en cours...';
-      message.className = 'message';
-      auditReport.style.display = 'none';
-
-      const payload = {
-        farmName: form.farmName.value.trim(),
-        date: form.date.value,
-        vegetation: {
-          cropName: form.cropName.value.trim(),
-          area: form.cropArea.value.trim(),
-          yield: form.cropYield.value.trim(),
-          price: form.cropPrice.value.trim(),
-          harvestLoss: form.cropHarvestLoss.value.trim(),
-          marketCircuit: form.marketCircuit.value,
-          transportCost: form.transportCost.value.trim(),
-        },
-        livestock: {
-          type: form.livestockType.value.trim(),
-          count: form.livestockCount.value.trim(),
-          feedCostMonthly: form.livestockFeedCost.value.trim(),
-          mortalityRate: form.livestockMortalityRate.value.trim(),
-          manure: form.livestockManure.value.trim(),
-        },
-        circularity: {
-          residueVolume: form.residueVolume.value.trim(),
-          valorisationType: form.valorisationType.value,
-          msnLivestockSynergy: form['msn-livestock-synergy'].checked,
-        },
-        economic: {
-          labourCost: form.labourCost.value.trim(),
-          fertiliserCost: form.fertiliserCost.value.trim(),
-        },
-      };
-
-      try {
-        const response = await fetch('/audit', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        });
-
-        const result = await response.json();
-
-        if (response.ok && result.status === 'ok') {
-          message.textContent = `✅ ${result.message}`;
-          message.className = 'message success';
-          renderAuditReport(result.report);
-        } else {
-          message.textContent = `❌ Erreur: ${result.message || 'Erreur serveur'}`;
-          message.className = 'message error';
-        }
-      } catch (error) {
-        message.textContent = `❌ Erreur réseau: ${error.message}`;
-        message.className = 'message error';
-      }
-    });
-  </script>
-</body>
-<div id="scoreContainer" style="position: fixed; bottom: 0; left: 0; width: 100%; background-color: #b7094c; color: white; text-align: center; padding: 15px 0; font-family: sans-serif; font-size: 1.2rem; font-weight: bold; box-shadow: 0 -3px 10px rgba(0,0,0,0.2); z-index: 1000; transition: background-color 0.5s ease;">
-        Résilience Globale : <span id="scoreValue">0</span>% (<span id="scoreStatus">Critique</span>)
+      <div class="nav-btns">
+        <button type="button" class="btn-nav next" onclick="goToTab(1)">Section suivante : Production Végétale →</button>
+      </div>
     </div>
 
- <script>
-        // Sélection des éléments de la page
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-        const textInputs = document.querySelectorAll('input[type="text"], input[type="date"], textarea');
-        const scoreValue = document.getElementById('scoreValue');
-        const scoreStatus = document.getElementById('scoreStatus');
-        const scoreContainer = document.getElementById('scoreContainer');
+    <div class="tab-content" id="tab-1">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">🌾</div>
+          <div><h2>Production Végétale</h2><p>Cultures, rendements et commercialisation</p></div>
+        </div>
+        <div class="section-label">Culture principale</div>
+        <div class="form-row">
+          <div class="form-group"><label>Nom de la culture</label><input type="text" name="cropName" placeholder="Ex: Maïs, Manioc, Riz" /></div>
+          <div class="form-group"><label>Variété / Semence</label><input type="text" name="cropVariety" placeholder="Ex: Semence améliorée" /></div>
+        </div>
+        <div class="form-row three">
+          <div class="form-group"><label>Surface cultivée (ha)</label><input type="text" name="cropArea" placeholder="2.5" /></div>
+          <div class="form-group"><label>Rendement (t/ha)</label><input type="text" name="cropYield" placeholder="1.8" /></div>
+          <div class="form-group"><label>Prix vente (FCFA/kg)</label><input type="text" name="cropPrice" placeholder="150" /></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Pertes récolte (%)</label><input type="text" name="cropHarvestLoss" placeholder="10" /></div>
+          <div class="form-group"><label>Durée cycle (semaines)</label><input type="text" name="cropCycle" placeholder="16" /></div>
+        </div>
+        <div class="section-label">Intrants et Coûts</div>
+        <div class="form-row">
+          <div class="form-group"><label>Coût intrants (FCFA/saison)</label><input type="text" name="inputCost" placeholder="75000" /></div>
+          <div class="form-group">
+            <label>Type d'intrants utilisés</label>
+            <select name="inputType">
+              <option value="chimique">Engrais chimiques uniquement</option>
+              <option value="mixte">Mixte (chimique + organique)</option>
+              <option value="organique">Organique uniquement</option>
+              <option value="aucun">Aucun intrant</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Coût transport et emballage (FCFA)</label><input type="text" name="transportCost" placeholder="50000" /></div>
+          <div class="form-group">
+            <label>Circuit de commercialisation</label>
+            <select name="marketCircuit">
+              <option value="">-- Sélectionnez --</option>
+              <option value="farm-gate">Bord de champ</option>
+              <option value="local-market">Marché local</option>
+              <option value="supermarche">Supermarché</option>
+              <option value="agro-industry">Agro-industrie</option>
+              <option value="export">Export</option>
+            </select>
+          </div>
+        </div>
+        <div class="section-label">Résidus végétaux</div>
+        <div class="form-row">
+          <div class="form-group"><label>Type de résidu</label><input type="text" name="dechets_vegetaux_type" placeholder="Ex: Tiges de maïs" /></div>
+          <div class="form-group"><label>Quantité (kg/mois)</label><input type="text" name="dechets_vegetaux_quantite" placeholder="200" /></div>
+        </div>
+        <div class="form-group">
+          <label>Usage actuel des résidus végétaux</label>
+          <select name="dechets_vegetaux_usage">
+            <option value="abandonne">Abandonné / Brûlé</option>
+            <option value="compost">Compostage artisanal</option>
+            <option value="animaux">Alimentation animale</option>
+            <option value="charbon">Charbon vert / Biogaz</option>
+            <option value="valorise">Valorisation avancée</option>
+          </select>
+        </div>
+      </div>
+      <div class="nav-btns">
+        <button type="button" class="btn-nav" onclick="goToTab(0)">← Retour</button>
+        <button type="button" class="btn-nav next" onclick="goToTab(2)">Elevage →</button>
+      </div>
+    </div>
 
-        const pointsParCase = 10;
+    <div class="tab-content" id="tab-2">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">🐐</div>
+          <div><h2>Elevage</h2><p>Animaux, alimentation et santé du troupeau</p></div>
+        </div>
+        <div class="section-label">Troupeau</div>
+        <div class="form-row">
+          <div class="form-group"><label>Type de bêtes</label><input type="text" name="livestockType" placeholder="Ex: Poules, Chèvres" /></div>
+          <div class="form-group"><label>Effectif total</label><input type="text" name="livestockCount" placeholder="50" /></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Production principale</label>
+            <select name="livestockProduct">
+              <option value="viande">Viande</option>
+              <option value="oeufs">Oeufs</option>
+              <option value="lait">Lait</option>
+              <option value="mixte">Mixte</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Taux de mortalité (%)</label><input type="text" name="livestockMortalityRate" placeholder="5" /></div>
+        </div>
+        <div class="section-label">Alimentation et Coûts</div>
+        <div class="form-row">
+          <div class="form-group"><label>Coût alimentation (FCFA/mois)</label><input type="text" name="livestockFeedCost" placeholder="85000" /></div>
+          <div class="form-group">
+            <label>Source alimentation</label>
+            <select name="feedSource">
+              <option value="achetee">Achetée entièrement</option>
+              <option value="mixte">Mixte (achat + local)</option>
+              <option value="locale">Majoritairement locale</option>
+              <option value="bsf">Larves BSF intégrées</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Déjections produites (kg/mois)</label><input type="text" name="livestockManure" placeholder="500" /></div>
+          <div class="form-group"><label>Revenu mensuel élevage (FCFA)</label><input type="text" name="livestockRevenue" placeholder="120000" /></div>
+        </div>
+        <div class="section-label">Résidus animaux</div>
+        <div class="form-row">
+          <div class="form-group"><label>Type de résidu</label><input type="text" name="dechets_animaux_type" placeholder="Ex: Fientes de volaille" /></div>
+          <div class="form-group">
+            <label>Usage actuel</label>
+            <select name="dechets_animaux_usage">
+              <option value="abandonne">Abandonné / Perdu</option>
+              <option value="compost">Compostage</option>
+              <option value="epandage">Epandage direct</option>
+              <option value="vendu">Vendu comme engrais</option>
+              <option value="biogaz">Biogaz</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="nav-btns">
+        <button type="button" class="btn-nav" onclick="goToTab(1)">← Retour</button>
+        <button type="button" class="btn-nav next" onclick="goToTab(3)">Circularité →</button>
+      </div>
+    </div>
 
-        // 1. FONCTION DE CALCUL DU SCORE
-        function calculerScore() {
-            let totalMaxPoints = checkboxes.length * pointsParCase;
-            let pointsObtenus = 0;
+    <div class="tab-content" id="tab-3">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">♻️</div>
+          <div><h2>Valorisation Circulaire</h2><p>Economie bleue, synergies et innovations</p></div>
+        </div>
+        <div class="section-label">Résidus valorisés</div>
+        <div class="form-row">
+          <div class="form-group"><label>Volume total valorisé (kg/mois)</label><input type="text" name="residueVolume" placeholder="300" /></div>
+          <div class="form-group">
+            <label>Type de valorisation</label>
+            <select name="valorisationType">
+              <option value="">-- Sélectionnez --</option>
+              <option value="compost">Compostage</option>
+              <option value="msn">Larves BSF</option>
+              <option value="biogaz">Biogaz</option>
+              <option value="charbon">Charbon vert / Biochar</option>
+              <option value="engrais_liquide">Engrais liquide fermenté</option>
+              <option value="vente">Vente directe de résidus</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Revenu valorisation (FCFA/mois)</label><input type="text" name="circularRevenue" placeholder="0" /></div>
+          <div class="form-group">
+            <label>Accès à l'eau d'irrigation</label>
+            <select name="waterAccess">
+              <option value="aucun">Aucun accès</option>
+              <option value="pluie">Pluie uniquement</option>
+              <option value="puits">Puits / Forage</option>
+              <option value="reseau">Réseau irrigué</option>
+              <option value="cours_eau">Cours d'eau naturel</option>
+            </select>
+          </div>
+        </div>
+        <div class="section-label">Pratiques circulaires actives</div>
+        <div class="checkbox-group">
+          <label class="checkbox-item"><input type="checkbox" name="msn-livestock-synergy" /><div><div class="cb-label">Synergie BSF (Mouche Soldat Noire)</div><span class="cb-desc">Réduit les coûts d'alimentation de 35%</span></div></label>
+          <label class="checkbox-item"><input type="checkbox" name="compost-cultures" /><div><div class="cb-label">Compost utilisé sur cultures</div><span class="cb-desc">Remplacement partiel ou total des engrais chimiques</span></div></label>
+          <label class="checkbox-item"><input type="checkbox" name="eau-recyclee" /><div><div class="cb-label">Récupération des eaux de pluie</div><span class="cb-desc">Système de rétention ou collecte en place</span></div></label>
+          <label class="checkbox-item"><input type="checkbox" name="agroforesterie" /><div><div class="cb-label">Agroforesterie intégrée</div><span class="cb-desc">Arbres fruitiers ou ombrage dans les parcelles</span></div></label>
+          <label class="checkbox-item"><input type="checkbox" name="vente-sous-produits" /><div><div class="cb-label">Vente de sous-produits agricoles</div><span class="cb-desc">Compost, engrais, larves ou autres sous-produits vendus</span></div></label>
+          <label class="checkbox-item"><input type="checkbox" name="semences-locales" /><div><div class="cb-label">Semences locales conservées</div><span class="cb-desc">Autonomie semencière — pas d'achat chaque saison</span></div></label>
+        </div>
+      </div>
+      <div class="nav-btns">
+        <button type="button" class="btn-nav" onclick="goToTab(2)">← Retour</button>
+        <button type="button" class="btn-nav next" onclick="goToTab(4)">Economie →</button>
+      </div>
+    </div>
 
-            checkboxes.forEach(box => {
-                if (box.checked) {
-                    pointsObtenus += pointsParCase;
-                }
-            });
+    <div class="tab-content" id="tab-4">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">💰</div>
+          <div><h2>Facteurs Economiques</h2><p>Coûts, revenus et souveraineté financière</p></div>
+        </div>
+        <div class="section-label">Charges mensuelles</div>
+        <div class="form-row">
+          <div class="form-group"><label>Main-d'oeuvre (FCFA/mois)</label><input type="text" name="labourCost" placeholder="150000" /></div>
+          <div class="form-group"><label>Engrais chimiques (FCFA/an)</label><input type="text" name="fertiliserCost" placeholder="100000" /></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Crédit / Dettes agricoles (FCFA)</label><input type="text" name="debtAmount" placeholder="0" /></div>
+          <div class="form-group"><label>Taux d'intérêt (%)</label><input type="text" name="interestRate" placeholder="0" /></div>
+        </div>
+        <div class="section-label">Revenus totaux</div>
+        <div class="form-row">
+          <div class="form-group"><label>Revenu culture principale (FCFA/mois)</label><input type="text" name="cropRevenue" placeholder="200000" /></div>
+          <div class="form-group"><label>Autres revenus agricoles (FCFA/mois)</label><input type="text" name="otherRevenue" placeholder="50000" /></div>
+        </div>
+        <div class="section-label">Accès aux marchés et financement</div>
+        <div class="checkbox-group">
+          <label class="checkbox-item"><input type="checkbox" name="acces-credit" /><div><div class="cb-label">Accès à un crédit agricole formel</div><span class="cb-desc">PAPME, FNFI, microfinance ou banque agricole</span></div></label>
+          <label class="checkbox-item"><input type="checkbox" name="acces-marche-prime" /><div><div class="cb-label">Accès à un marché premium ou certifié</div><span class="cb-desc">Label bio, commerce équitable, export</span></div></label>
+          <label class="checkbox-item"><input type="checkbox" name="assurance-agricole" /><div><div class="cb-label">Assurance agricole souscrite</div><span class="cb-desc">Protection contre les risques climatiques ou sanitaires</span></div></label>
+          <label class="checkbox-item"><input type="checkbox" name="groupement" /><div><div class="cb-label">Membre d'un groupement ou coopérative</div><span class="cb-desc">Accès collectif aux marchés, intrants ou équipements</span></div></label>
+        </div>
+      </div>
+      <button type="submit" class="btn-primary" id="submit-btn">Générer le Diagnostic ADODO</button>
+    </div>
 
-            let pourcentage = totalMaxPoints > 0 ? Math.round((pointsObtenus / totalMaxPoints) * 100) : 0;
-            
-            // Sécurité si l'élément scoreValue existe
-            if (scoreValue) scoreValue.textContent = pourcentage;
+  </form>
+  <section id="audit-report"></section>
+</main>
 
-            if (scoreContainer && scoreStatus) {
-                if (pourcentage <= 40) {
-                    scoreContainer.style.backgroundColor = "#b7094c"; // Rouge
-                    scoreStatus.textContent = "Critique";
-                } else if (pourcentage > 40 && pourcentage <= 70) {
-                    scoreContainer.style.backgroundColor = "#e9b824"; // Orange
-                    scoreStatus.textContent = "En Transition";
-                } else {
-                    scoreContainer.style.backgroundColor = "#1b4332"; // Vert STAMINA
-                    scoreStatus.textContent = "Souverain / Résilient";
-                }
-            }
-        }
+<div id="scoreContainer">
+  Résilience Globale : <span id="scoreValue">0</span>% (<span id="scoreStatus">Critique</span>)
+</div>
 
-        // 2. FONCTION POUR SAUVEGARDER LES DONNÉES DANS L'IPHONE
-        function sauvegarderDonnees() {
-            const donneesAudit = {
-                checkboxes: {},
-                textes: {}
-            };
+<script>
+  function goToTab(index) {
+    document.querySelectorAll('.tab-content').forEach((t, i) => t.classList.toggle('active', i === index));
+    document.querySelectorAll('.progress-step').forEach((s, i) => {
+      s.classList.remove('active', 'done');
+      if (i < index) s.classList.add('done');
+      if (i === index) s.classList.add('active');
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
-            // Sauvegarde des cases cochées
-            checkboxes.forEach((box, index) => {
-                donneesAudit.checkboxes[index] = box.checked;
-            });
+  const scoreValue = document.getElementById('scoreValue');
+  const scoreStatus = document.getElementById('scoreStatus');
+  const scoreContainer = document.getElementById('scoreContainer');
 
-            // Sauvegarde des champs textes
-            textInputs.forEach((input, index) => {
-                const cle = input.id || input.name || 'input_' + index;
-                donneesAudit.textes[cle] = input.value;
-            });
+  function calculerScore() {
+    const boxes = document.querySelectorAll('input[type="checkbox"]');
+    let checked = 0;
+    boxes.forEach(b => { if (b.checked) checked++; });
+    const pct = boxes.length > 0 ? Math.round((checked / boxes.length) * 100) : 0;
+    if (scoreValue) scoreValue.textContent = pct;
+    if (scoreContainer && scoreStatus) {
+      if (pct <= 30) { scoreContainer.style.background = '#b7094c'; scoreStatus.textContent = 'Critique'; }
+      else if (pct <= 60) { scoreContainer.style.background = '#e9b824'; scoreStatus.textContent = 'En Transition'; }
+      else { scoreContainer.style.background = '#1b4332'; scoreStatus.textContent = 'Souverain / Resilient'; }
+    }
+  }
 
-            // Stockage local sous forme de chaîne de caractères
-            localStorage.setItem('stamina_audit_sauvegarde', JSON.stringify(donneesAudit));
-        }
+  document.querySelectorAll('input[type="checkbox"]').forEach(b => b.addEventListener('change', calculerScore));
+  calculerScore();
 
-        // 3. FONCTION POUR CHARGER LES DONNÉES AU DÉMARRAGE
-        function chargerDonnees() {
-            const sauvegarde = localStorage.getItem('stamina_audit_sauvegarde');
-            if (!sauvegarde) return;
+  function sauvegarder() {
+    const data = {};
+    document.querySelectorAll('input, select, textarea').forEach((el, i) => {
+      const key = el.name || el.id || 'f_' + i;
+      data[key] = el.type === 'checkbox' ? el.checked : el.value;
+    });
+    localStorage.setItem('adodo_v1', JSON.stringify(data));
+  }
 
-            const donneesAudit = JSON.parse(sauvegarde);
+  function charger() {
+    const saved = localStorage.getItem('adodo_v1');
+    if (!saved) return;
+    const data = JSON.parse(saved);
+    document.querySelectorAll('input, select, textarea').forEach((el, i) => {
+      const key = el.name || el.id || 'f_' + i;
+      if (data[key] !== undefined) {
+        if (el.type === 'checkbox') el.checked = data[key];
+        else el.value = data[key];
+      }
+    });
+    calculerScore();
+  }
 
-            // Restauration des cases
-            checkboxes.forEach((box, index) => {
-                if (donneesAudit.checkboxes && donneesAudit.checkboxes[index] !== undefined) {
-                    box.checked = donneesAudit.checkboxes[index];
-                }
-            });
+  document.querySelectorAll('input, select, textarea').forEach(el => {
+    el.addEventListener('input', sauvegarder);
+    el.addEventListener('change', sauvegarder);
+  });
+  charger();
 
-            // Restauration des textes
-            textInputs.forEach((input, index) => {
-                const cle = input.id || input.name || 'input_' + index;
-                if (donneesAudit.textes && donneesAudit.textes[cle] !== undefined) {
-                    input.value = donneesAudit.textes[cle];
-                }
-            });
-        }
+  function renderReport(report) {
+    const auditReport = document.getElementById('audit-report');
+    const scoreColor = report.resilienceScore >= 60 ? '#1b4332' : report.resilienceScore >= 30 ? '#e9b824' : '#b7094c';
+    const marginClass = report.netRealMargin < 0 ? 'negative' : '';
+    const recoHtml = (report.recommendations || []).map(r => '<li class="reco-item">' + r + '</li>').join('');
 
-        // 4. ÉCOUTEURS D'ÉVÉNEMENTS
-        checkboxes.forEach(box => {
-            box.addEventListener('change', () => {
-                calculerScore();
-                sauvegarderDonnees();
-            });
-        });
+    auditReport.innerHTML = '<div class="report-hero"><div class="farm-name">' + report.title + '</div><div class="report-date">Genere le ' + new Date().toLocaleDateString('fr-FR', {day:'2-digit', month:'long', year:'numeric'}) + ' — ADODO</div><div class="score-display"><div><div style="font-size:0.75rem;color:rgba(255,255,255,0.65);margin-bottom:2px;">SCORE DE RESILIENCE</div><div class="score-number">' + report.resilienceScore + '<span style="font-size:1.5rem;font-weight:400">/100</span></div></div><div style="flex:1;padding-bottom:12px;"><div class="score-bar-outer" style="margin-bottom:6px;"><div class="score-bar-inner" id="score-bar" style="width:0%;background:' + scoreColor + '"></div></div><div style="font-size:0.78rem;color:rgba(255,255,255,0.65);">' + (report.resilienceScore >= 60 ? 'Exploitation Resiliente' : report.resilienceScore >= 30 ? 'En Transition' : 'Situation Critique — Action requise') + '</div></div></div></div><div class="kpi-grid"><div class="kpi-card"><div class="kpi-icon">💵</div><div class="kpi-value ' + marginClass + '">' + report.netRealMargin.toLocaleString('fr-FR') + ' FCFA</div><div class="kpi-label">Marge Nette Réelle</div></div><div class="kpi-card"><div class="kpi-icon">🚛</div><div class="kpi-value">' + report.logisticLosses.toLocaleString('fr-FR') + ' FCFA</div><div class="kpi-label">Pertes Logistiques</div></div><div class="kpi-card"><div class="kpi-icon">📊</div><div class="kpi-value">' + report.economicSovereigntyIndex + '%</div><div class="kpi-label">Indice de Souveraineté</div></div><div class="kpi-card"><div class="kpi-icon">🌿</div><div class="kpi-value">' + report.vegetalLossRate + '%</div><div class="kpi-label">Taux de Pertes Végétal</div></div></div><div class="analysis-card"><div class="analysis-card-header"><span>🌾</span><h3>Production Végétale</h3></div><div class="analysis-card-body"><p>' + report.vegetalAnalysis + '</p></div></div><div class="analysis-card"><div class="analysis-card-header"><span>🐐</span><h3>Elevage</h3></div><div class="analysis-card-body"><p>' + report.livestockAnalysis + '</p></div></div><div class="analysis-card"><div class="analysis-card-header"><span>♻️</span><h3>Valorisation Circulaire</h3></div><div class="analysis-card-body"><p>' + report.circularityAnalysis + '</p></div></div><div class="analysis-card"><div class="analysis-card-header"><span>💰</span><h3>Analyse Economique</h3></div><div class="analysis-card-body"><p>' + report.economicAnalysis + '</p></div></div><div class="card"><div class="card-header"><div class="card-icon">🎯</div><div><h2>Recommandations Stratégiques ADODO</h2><p>Economie bleue et circulaire</p></div></div><ul class="reco-list">' + recoHtml + '</ul></div><button class="btn-pdf" onclick="exporterPDF()">Telecharger le Rapport PDF</button><button class="btn-secondary" onclick="exporterTexte()">Exporter (WhatsApp / Email)</button><button class="btn-danger" onclick="nouveauAudit()">Nouvel audit</button>';
 
-        textInputs.forEach(input => {
-            input.addEventListener('input', sauvegarderDonnees);
-        });
+    auditReport.style.display = 'block';
+    setTimeout(() => { const bar = document.getElementById('score-bar'); if (bar) bar.style.width = report.resilienceScore + '%'; }, 100);
+    if (scoreValue) scoreValue.textContent = report.resilienceScore;
+    if (scoreContainer && scoreStatus) {
+      if (report.resilienceScore >= 60) { scoreContainer.style.background = '#1b4332'; scoreStatus.textContent = 'Souverain / Resilient'; }
+      else if (report.resilienceScore >= 30) { scoreContainer.style.background = '#e9b824'; scoreStatus.textContent = 'En Transition'; }
+      else { scoreContainer.style.background = '#b7094c'; scoreStatus.textContent = 'Critique'; }
+    }
+    auditReport.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 
-        // 5. DEMARRAGE AUTOMATIQUE
-        chargerDonnees();
-        calculerScore();
-    </script>
-    function exporterRapport() {
-    let rapport = "--- RAPPORT STAMINA LEAD ---\n";
-    rapport += "Ferme : " + (document.querySelector('input[name="farmName"]')?.value || "Non spécifié") + "\n";
-    rapport += "Date : " + (document.querySelector('input[name="date"]')?.value || "Non spécifiée") + "\n";
-    rapport += "Score : " + (document.getElementById('scoreValue')?.textContent || "0") + "%\n\n";
-    rapport += "Détails cochés :\n";
-    
-    document.querySelectorAll('input[type="checkbox"]').forEach((box) => {
-        const label = box.parentElement.textContent.trim();
-        rapport += (box.checked ? "[✔] " : "[ ] ") + label + "\n";
+  const form = document.getElementById('audit-form');
+  const msgEl = document.getElementById('message');
+  const loadingEl = document.getElementById('loading');
+
+  form.addEventListener('submit', async event => {
+    event.preventDefault();
+    msgEl.className = 'message'; msgEl.style.display = 'none';
+    document.getElementById('audit-report').style.display = 'none';
+    loadingEl.style.display = 'block';
+    document.getElementById('submit-btn').disabled = true;
+
+    const f = form;
+    const getVal = name => f.elements[name]?.value?.trim() || '';
+    const getChecked = name => f.elements[name]?.checked || false;
+
+    const payload = {
+      farmName: getVal('farmName'), date: getVal('date'), region: getVal('region'),
+      auditorName: getVal('auditorName'), totalArea: getVal('totalArea'), farmType: getVal('farmType'),
+      generalObservations: getVal('generalObservations'),
+      vegetation: { cropName: getVal('cropName'), cropVariety: getVal('cropVariety'), area: getVal('cropArea'), yield: getVal('cropYield'), price: getVal('cropPrice'), harvestLoss: getVal('cropHarvestLoss'), cropCycle: getVal('cropCycle'), inputCost: getVal('inputCost'), inputType: getVal('inputType'), transportCost: getVal('transportCost'), marketCircuit: getVal('marketCircuit') },
+      livestock: { type: getVal('livestockType'), count: getVal('livestockCount'), product: getVal('livestockProduct'), mortalityRate: getVal('livestockMortalityRate'), feedCostMonthly: getVal('livestockFeedCost'), feedSource: getVal('feedSource'), manure: getVal('livestockManure'), revenue: getVal('livestockRevenue') },
+      circularity: { residueVolume: getVal('residueVolume'), valorisationType: getVal('valorisationType'), circularRevenue: getVal('circularRevenue'), waterAccess: getVal('waterAccess'), msnLivestockSynergy: getChecked('msn-livestock-synergy'), compostCultures: getChecked('compost-cultures'), eauRecyclee: getChecked('eau-recyclee'), agroforesterie: getChecked('agroforesterie'), venteSousProduits: getChecked('vente-sous-produits'), semencesLocales: getChecked('semences-locales') },
+      economic: { labourCost: getVal('labourCost'), fertiliserCost: getVal('fertiliserCost'), debtAmount: getVal('debtAmount'), interestRate: getVal('interestRate'), cropRevenue: getVal('cropRevenue'), otherRevenue: getVal('otherRevenue'), accesCredit: getChecked('acces-credit'), acesMarchePrime: getChecked('acces-marche-prime'), assurance: getChecked('assurance-agricole'), groupement: getChecked('groupement') }
+    };
+
+    try {
+      const res = await fetch('/audit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      const result = await res.json();
+      loadingEl.style.display = 'none';
+      document.getElementById('submit-btn').disabled = false;
+      if (res.ok && result.status === 'ok') {
+        msgEl.textContent = 'Diagnostic ADODO genere avec succes.';
+        msgEl.className = 'message success';
+        renderReport(result.report);
+      } else {
+        msgEl.textContent = 'Erreur : ' + (result.message || 'Erreur serveur');
+        msgEl.className = 'message error';
+      }
+    } catch (err) {
+      loadingEl.style.display = 'none';
+      document.getElementById('submit-btn').disabled = false;
+      msgEl.textContent = 'Erreur reseau : ' + err.message;
+      msgEl.className = 'message error';
+    }
+  });
+
+  function exporterPDF() {
+    if (!window.jspdf) { alert('Chargement en cours, reessayez dans 2 secondes.'); return; }
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const farm = form.elements['farmName']?.value || 'Ferme';
+    const region = form.elements['region']?.value || '';
+    const auditeur = form.elements['auditorName']?.value || '';
+    const dateVisite = form.elements['date']?.value || '';
+    const score = document.getElementById('scoreValue')?.textContent || '0';
+    const dateGen = new Date().toLocaleDateString('fr-FR');
+
+    doc.setFillColor(27, 67, 50);
+    doc.rect(0, 0, 210, 45, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(22); doc.setFont('helvetica', 'bold');
+    doc.text('ADODO', 105, 16, { align: 'center' });
+    doc.setFontSize(10); doc.setFont('helvetica', 'italic');
+    doc.text('Adodo wo nyuie — La patience fait bien les choses', 105, 24, { align: 'center' });
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(9);
+    doc.text('Ferme : ' + farm + (region ? ' — ' + region : '') + ' | Date : ' + dateVisite + ' | Auditeur : ' + auditeur, 105, 34, { align: 'center' });
+
+    doc.setFillColor(245, 245, 240);
+    doc.rect(14, 50, 182, 22, 'F');
+    doc.setTextColor(27, 67, 50); doc.setFontSize(13); doc.setFont('helvetica', 'bold');
+    doc.text('Score de Resilience : ' + score + '/100', 20, 62);
+    const scoreNum = parseInt(score);
+    const statut = scoreNum >= 60 ? 'Souverain / Resilient' : scoreNum >= 30 ? 'En Transition' : 'Critique';
+    doc.setFontSize(9); doc.setFont('helvetica', 'normal'); doc.setTextColor(100, 100, 100);
+    doc.text('Statut : ' + statut + ' | Genere le ' + dateGen + ' via ADODO', 20, 69);
+
+    let y = 82;
+    const analyseTitles = ['Production Vegetale', 'Elevage', 'Valorisation Circulaire', 'Analyse Economique'];
+    document.querySelectorAll('.analysis-card-body p').forEach((el, i) => {
+      if (y > 260) { doc.addPage(); y = 20; }
+      doc.setFillColor(240, 248, 244); doc.rect(14, y - 5, 182, 8, 'F');
+      doc.setTextColor(27, 67, 50); doc.setFontSize(10); doc.setFont('helvetica', 'bold');
+      doc.text(analyseTitles[i] || 'Section', 18, y);
+      y += 8;
+      doc.setFont('helvetica', 'normal'); doc.setTextColor(60, 60, 60); doc.setFontSize(9);
+      const lines = doc.splitTextToSize(el.textContent, 174);
+      doc.text(lines, 18, y);
+      y += lines.length * 5 + 8;
     });
 
-    // Copie automatique dans le presse-papier
-    navigator.clipboard.writeText(rapport).then(() => {
-        alert("Rapport copié ! Vous pouvez maintenant le coller dans WhatsApp ou un email.\n\n" + rapport);
+    if (y > 240) { doc.addPage(); y = 20; }
+    doc.setFillColor(27, 67, 50); doc.rect(14, y - 5, 182, 9, 'F');
+    doc.setTextColor(255, 255, 255); doc.setFontSize(11); doc.setFont('helvetica', 'bold');
+    doc.text('Recommandations Strategiques — Economie Bleue et Circulaire', 18, y + 1);
+    y += 12;
+
+    document.querySelectorAll('.reco-item').forEach((el, i) => {
+      if (y > 270) { doc.addPage(); y = 20; }
+      doc.setFillColor(i % 2 === 0 ? 248 : 255, 252, 248);
+      const textLines = doc.splitTextToSize(el.textContent.trim(), 170);
+      const blockH = textLines.length * 5 + 6;
+      doc.rect(14, y - 4, 182, blockH, 'F');
+      doc.setFillColor(82, 183, 136); doc.rect(14, y - 4, 3, blockH, 'F');
+      doc.setTextColor(40, 40, 40); doc.setFontSize(9); doc.setFont('helvetica', 'normal');
+      doc.text(textLines, 20, y);
+      y += blockH + 4;
     });
-}  
+
+    const pageCount = doc.internal.getNumberOfPages();
+    for (let p = 1; p <= pageCount; p++) {
+      doc.setPage(p);
+      doc.setFillColor(27, 67, 50); doc.rect(0, 287, 210, 10, 'F');
+      doc.setTextColor(255, 255, 255); doc.setFontSize(7);
+      doc.text('ADODO — Outil Audit Agricole | Economie Bleue et Circulaire | by STAMINA', 105, 293, { align: 'center' });
+      doc.text('Page ' + p + '/' + pageCount, 195, 293, { align: 'right' });
+    }
+
+    doc.save('Rapport_ADODO_' + farm.replace(/\s/g, '_') + '_' + dateGen.replace(/\//g, '-') + '.pdf');
+  }
+
+  function exporterTexte() {
+    const farm = form.elements['farmName']?.value || 'Ferme';
+    const score = document.getElementById('scoreValue')?.textContent || '0';
+    const date = new Date().toLocaleDateString('fr-FR');
+    let rapport = '=== RAPPORT ADODO ===\nFerme : ' + farm + '\nDate : ' + date + '\nScore : ' + score + '/100\nAdodo wo nyuie — La patience fait bien les choses\n\n';
+    document.querySelectorAll('.analysis-card-body p').forEach((el, i) => {
+      const titres = ['Production Vegetale', 'Elevage', 'Valorisation Circulaire', 'Analyse Economique'];
+      rapport += '--- ' + (titres[i] || 'Section') + ' ---\n' + el.textContent + '\n\n';
+    });
+    rapport += '--- Recommandations ---\n';
+    document.querySelectorAll('.reco-item').forEach(el => { rapport += '* ' + el.textContent.trim() + '\n'; });
+    rapport += '\n--- ADODO by STAMINA | Economie Bleue et Circulaire ---';
+    navigator.clipboard.writeText(rapport)
+      .then(() => alert('Rapport copie ! Collez-le dans WhatsApp, email ou Word.'))
+      .catch(() => alert('Rapport :\n\n' + rapport));
+  }
+
+  function nouveauAudit() {
+    if (confirm('Effacer toutes les donnees et recommencer un nouvel audit ?')) {
+      localStorage.removeItem('adodo_v1');
+      form.reset();
+      document.getElementById('audit-report').style.display = 'none';
+      msgEl.className = 'message'; msgEl.style.display = 'none';
+      goToTab(0); calculerScore();
+    }
+  }
+</script>
 </body>
 </html>
- 
