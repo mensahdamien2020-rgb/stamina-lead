@@ -1,19 +1,15 @@
 {
-  "name": "stamina-lead",
-  "version": "0.1.0",
-  "description": "Outil d'audit agricole STAMINA LEAD - prototype",
+  "name": "adodo",
+  "version": "1.0.0",
+  "description": "Outil audit agricole - Afrique de l'Ouest",
   "main": "src/server.js",
   "scripts": {
-    "prestart": "npx kill-port 3000",
     "start": "node src/server.js"
   },
   "dependencies": {
     "express": "^4.22.2",
     "mongoose": "^9.7.3"
   },
-  "devDependencies": {
-    "kill-port": "^1.6.0"
-  },
-  "author": "STAMINA LEAD",
+  "author": "Mensah Damien",
   "license": "MIT"
 }
